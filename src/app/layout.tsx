@@ -17,10 +17,32 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+function resolveMetadataBase() {
+  const candidates = [
+    process.env.NEXT_PUBLIC_SITE_URL,
+    process.env.VERCEL_PROJECT_PRODUCTION_URL,
+    process.env.VERCEL_URL,
+  ];
+
+  for (const value of candidates) {
+    const trimmed = value?.trim();
+    if (!trimmed) continue;
+
+    const normalized = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+    try {
+      return new URL(normalized);
+    } catch {
+      // Ignore malformed environment values and try the next safe candidate.
+    }
+  }
+
+  return new URL("http://localhost:3000");
+}
+
+const metadataBase = resolveMetadataBase();
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase,
   title: {
     default: "EIRA | Joias sob tensão",
     template: "%s | EIRA",
