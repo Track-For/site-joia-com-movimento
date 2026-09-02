@@ -9,7 +9,7 @@ import { getFeaturedProducts } from "@/lib/products";
 
 export default function HomePage() {
   const featured = getFeaturedProducts();
-  const videoSrc = process.env.NEXT_PUBLIC_HERO_VIDEO_URL;
+  const videoSrc = process.env.NEXT_PUBLIC_HERO_VIDEO_URL?.trim() || "/videos/hero-intervalo.mp4";
 
   const itemListSchema = {
     "@context": "https://schema.org",
